@@ -119,7 +119,7 @@ imap <buffer> \wr ≀
 imap <buffer> \sum ∑
 imap <buffer> \prod ∏
 imap <buffer> \coprod ∐
-imap <buffer> \int ∨
+imap <buffer> \int ∫
 imap <buffer> \bigcup ⋃
 imap <buffer> \bigcap ⋂
 imap <buffer> \bigsqcup ⊔
@@ -342,7 +342,8 @@ augroup END
 " function to convert utf8 symbols to latex symbols
 function s:UTF8toLaTeX()
 	" store cursor position
-	norm ml
+	let s:line = line(".")
+	let s:column = col(".")
 	silent %s/α/{\\alpha}/eg
 	silent %s/β/{\\beta}/eg
 	silent %s/γ/{\\gamma}/eg
@@ -458,7 +459,7 @@ function s:UTF8toLaTeX()
 	silent %s/∑/{\\sum}/eg
 	silent %s/∏/{\\prod}/eg
 	silent %s/∐/{\\coprod}/eg
-	silent %s/∨/{\\int}/eg
+	silent %s/∫/{\\int}/eg
 	silent %s/⋃/{\\bigcup}/eg
 	silent %s/⋂/{\\bigcap}/eg
 	silent %s/⊔/{\\bigsqcup}/eg
@@ -670,13 +671,15 @@ function s:UTF8toLaTeX()
 	" restore old encoding before writing
 	let &l:fileencoding = s:oldencoding
 	" restore cursor position
-	norm 'l
+	call cursor(s:line,s:column)
 endfunction
 
 " function to convert latex symbols to utf-8
 function s:LaTeXtoUTF8()
 	" store cursor position
-	norm ml
+	let s:line = line(".")
+	let s:column = col(".")
+
 	" store the fileencoding
 	let s:oldencoding = &l:fileencoding
 	" set the encoding to utf-8
@@ -1028,9 +1031,9 @@ function s:LaTeXtoUTF8()
 	silent %s/{\\coprod}/∐/eg
 	silent %s/\\coprod\a\@!\s*/∐/eg
 	silent %s/\\coprod\s*$/∐%/eg
-	silent %s/{\\int}/∨/eg
-	silent %s/\\int\a\@!\s*/∨/eg
-	silent %s/\\int\s*$/∨%/eg
+	silent %s/{\\int}/∫/eg
+	silent %s/\\int\a\@!\s*/∫/eg
+	silent %s/\\int\s*$/∫%/eg
 	silent %s/{\\bigcup}/⋃/eg
 	silent %s/\\bigcup\a\@!\s*/⋃/eg
 	silent %s/\\bigcup\s*$/⋃%/eg
@@ -1075,7 +1078,7 @@ function s:LaTeXtoUTF8()
 	silent %s/\\Leftarrow\s*$/⇐%/eg
 	silent %s/{\\Rightarrow}/⇒/eg
 	silent %s/\\Rightarrow\a\@!\s*/⇒/eg
-	silent %s/\\Rightarrow\s*$/⇒%/eg
+	silent %s/\\Rightarrow\s*$/%/eg
 	silent %s/{\\Leftrightarrow}/⇔/eg
 	silent %s/\\Leftrightarrow\a\@!\s*/⇔/eg
 	silent %s/\\Leftrightarrow\s*$/⇔%/eg
@@ -1652,7 +1655,7 @@ function s:LaTeXtoUTF8()
 	silent %s/{\\mho}/℧/eg
 	silent %s/\\mho\a\@!\s*/℧/eg
 	silent %s/\\mho\s*$/℧%/eg
-	'l
+	call cursor(s:line,s:column)
 endfunction
 
 do LaTeX BufRead
