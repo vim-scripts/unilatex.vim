@@ -1,6 +1,6 @@
 " Vim file plugin for editing LaTeX files a unicode view.
-" Last Change: 2002 Apr 28
-" Version: 1.0
+" Last Change: 2002 Apr 29
+" Version: 1.1
 " Maintainer: Jos van den Oever <oever@fenk.wau.nl>
 " Helpful tips: Benji Fisher,  Antoine J. Mechelynck and Tomas Zellerin
 
@@ -340,7 +340,9 @@ augroup LaTeX
 augroup END
 
 " function to convert utf8 symbols to latex symbols
-function s:UTF8toLaTeX() 
+function s:UTF8toLaTeX()
+	" store cursor position
+	norm ml
 	silent %s/α/{\\alpha}/eg
 	silent %s/β/{\\beta}/eg
 	silent %s/γ/{\\gamma}/eg
@@ -667,10 +669,14 @@ function s:UTF8toLaTeX()
 
 	" restore old encoding before writing
 	let &l:fileencoding = s:oldencoding
+	" restore cursor position
+	norm 'l
 endfunction
 
 " function to convert latex symbols to utf-8
 function s:LaTeXtoUTF8()
+	" store cursor position
+	norm ml
 	" store the fileencoding
 	let s:oldencoding = &l:fileencoding
 	" set the encoding to utf-8
@@ -1646,6 +1652,7 @@ function s:LaTeXtoUTF8()
 	silent %s/{\\mho}/℧/eg
 	silent %s/\\mho\a\@!\s*/℧/eg
 	silent %s/\\mho\s*$/℧%/eg
+	'l
 endfunction
 
 do LaTeX BufRead
